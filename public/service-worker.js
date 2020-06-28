@@ -19,6 +19,12 @@ self.addEventListener("install", function(evt) {
 self.addEventListener('activate', evt =>{
   console.log ('service worker activated')
 })
-self.skipWaiting();
+
+//created fetch event when getting stuff from server
+self.addEventListener('fetch', evt =>{
+  console.log('fetch event',evt);
+})
+
+//self.skipWaiting();
 
 
