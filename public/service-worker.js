@@ -9,15 +9,16 @@ const FILES_TO_CACHE = [
 const CACHE_NAME = "static-cache-v2";
 const DATA_CACHE_NAME = "data-cache-v1";
 
-// install
+// install serviceworker
 self.addEventListener("install", function(evt) {
-  evt.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
-      console.log("Your files were pre-cached successfully!");
-      return cache.addAll(FILES_TO_CACHE);
+  console.log('service worker installed')
+ 
     })
-  );
-
+  
+//activate service worker
+self.addEventListener('activate', evt =>{
+  console.log ('service worker activated')
+})
 self.skipWaiting();
-});
+
 
