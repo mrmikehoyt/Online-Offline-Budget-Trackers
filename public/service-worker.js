@@ -1,4 +1,4 @@
-const CACHE_NAME = "static-cache-v6";
+const CACHE_NAME = "static-cache-v1";
 
 const FILES_TO_CACHE = [
   '/',
@@ -15,29 +15,35 @@ const FILES_TO_CACHE = [
 
 // install serviceworker
 self.addEventListener("install", function(evt) {
- // console.log('service worker installed')
+  console.log('service worker installed')
   evt.waitUntil(
   caches.open(CACHE_NAME).then(cache => {
-//    console.log('caching files')
+    console.log('caching files')
 cache.addAll(FILES_TO_CACHE)
   }))
     })
   
 //activate service worker
 self.addEventListener('activate', evt =>{
-  //console.log ('service worker activated')
+  console.log ('service worker activated')
 //waits for current service worker to finish activating
   evt.waitUntil(
   //displays keys static caches needed for changes
 caches.keys().then(keys => {
-console.log(keys); 
+//console.log(keys); 
+//promise all needed for array of old static cache names because there could be many cache names
+return Promise.all(keys
+  .filter(key => key !== CACHE_NAME)
+  .map(key => caches.delete(key))
+)  
 })
   );
 })
 
+//
 //created fetch event when getting stuff from server
 self.addEventListener('fetch', evt =>{
- // console.log('fetch event',evt);
+  console.log('fetch event',evt);
   evt.respondWith(
     caches.match(evt.request).then(cacheRes =>{
       return cacheRes || fetch(evt.request);
