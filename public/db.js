@@ -2,3 +2,9 @@ let db;
 
 //opens database budget default version is 1
 const request = indexedDB.open("budget", 1);
+//check if updgrade is needed when opening indexdb
+
+request.onupgradeneeded = function(event) {
+  const db = event.target.result;
+  db.createObjectStore("pending", { autoIncrement: true });
+};
