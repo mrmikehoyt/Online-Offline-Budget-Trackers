@@ -23,4 +23,14 @@ request.onerror = function(event) {
   console.log("Woops! " + event.target.errorCode);
   };
   
-  
+  function saveRecord(record) {
+    // open a read/write db transaction, ready for adding the data
+    const transaction = db.transaction(["pending"], "readwrite");
+    //setting store variable to objectstore pending
+    const store = transaction.objectStore("pending");
+    //adds idbobject of all objects and adds objects to pending store
+    
+    store.add(record);
+    }
+    
+    
