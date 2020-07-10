@@ -33,4 +33,11 @@ request.onerror = function(event) {
     store.add(record);
     }
     
-    
+    function checkDatabase() {
+    // open a read/write db transaction, ready for adding the data
+    const transaction = db.transaction(["pending"], "readwrite");
+    //setting store variable to objectstore pending
+    const store = transaction.objectStore("pending");
+    //returns idbobject of all objects of pending store
+    const getAll = store.getAll();
+    }
