@@ -40,4 +40,27 @@ request.onerror = function(event) {
     const store = transaction.objectStore("pending");
     //returns idbobject of all objects of pending store
     const getAll = store.getAll();
+    //when back online use post route /api/transaction/bulk to send to mongoose / mongodb database
+    getAll.onsuccess = function() {
+      if (getAll.result.length > 0) {
+        fetch("/api/transaction/bulk", {
+          method: "POST",
+          body: JSON.stringify(getAll.result),
+          headers: {
+            Accept: "application/json, text/plain, */*",
+            "Content-Type": "application/json"
+          }
+        })
+        .then(response => response.json())
+          .then(() => {
+            // delete records if successful
+            const transaction = db.transaction(["pending"], "readwrite");
+            const store = transaction.objectStore("pending");
+            //deletes idbobject and deletes all objects of pending store
+            store.clear();
+          });
+      }
+    };
     }
+    
+    
