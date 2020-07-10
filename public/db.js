@@ -8,3 +8,9 @@ request.onupgradeneeded = function(event) {
   const db = event.target.result;
   db.createObjectStore("pending", { autoIncrement: true });
 };
+//if succesfull opening indexdb
+request.onsuccess = function(event) {
+  // Save the IDBDatabase interface 
+  db = event.target.result;
+
+}
