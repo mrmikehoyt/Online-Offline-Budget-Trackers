@@ -18,3 +18,9 @@ if (navigator.onLine) {
   checkDatabase();
 }
 };
+//if there is an error opening indexdb
+request.onerror = function(event) {
+  console.log("Woops! " + event.target.errorCode);
+  };
+  
+  
