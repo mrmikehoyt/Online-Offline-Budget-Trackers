@@ -1,5 +1,8 @@
 let transactions = [];
 let myChart;
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js');
+}
 
 fetch("/api/transaction")
   .then(response => {
