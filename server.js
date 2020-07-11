@@ -45,6 +45,6 @@ mongoose.connect("mongodb://localhost/budget", {
 app.use(require("./routes/api.js"));
 app.use(express.static(__dirname + '/node_modules/bootstrap/dist'));
 
-app.listen(PORT, () => {
+app.listen(process.env.PORT || 3000);{
   console.log(`App running on port ${PORT}!`);
-});
+};
