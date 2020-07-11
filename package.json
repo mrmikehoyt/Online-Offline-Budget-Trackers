@@ -24,6 +24,7 @@
     "express": "^4.17.1",
     "lite-server": "^2.5.3",
     "minimist": "^1.2.5",
+    "mongodb": "^3.5.9",
     "mongoose": "^5.5.15",
     "morgan": "^1.9.1"
   }
