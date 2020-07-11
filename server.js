@@ -20,7 +20,7 @@ app.use(express.static('public'));
 
 //for connecting to heroku
 var MongoClient = mongodb.MongoClient;
-var url = 'mongodb://heroku_v7f1df4k:kp49qoqjj0b1lq7alimv72s58e@ds119210.mlab.com:19210/heroku_v7f1df4k';
+var url = 'mongodb://mike:password1@ds119210.mlab.com:19210/heroku_v7f1df4k';
 
 MongoClient.connect(url, function (err, db) {
   if (err) {
