@@ -1,66 +1,67 @@
 let db;
-// created a new db request for a budget database
-const request = indexedDB.open('budget', 1)
 
-request.onupgradeneeded = function(evt) {
-    const db = evt.target.result
-    db.createObjectStore('pending', { autoIncrement: true })
+//opens database budget default version is 1
+const request = indexedDB.open("budget", 1);
+//check if updgrade is needed when opening indexdb
+
+request.onupgradeneeded = function(event) {
+  const db = event.target.result;
+  db.createObjectStore("pending", { autoIncrement: true });
+};
+//if succesfull opening indexdb
+request.onsuccess = function(event) {
+  // Save the IDBDatabase interface 
+  db = event.target.result;
+
+// check if app is online before reading from db
+if (navigator.onLine) {
+  checkDatabase();
 }
-
-request.onsuccess = function(evt) {
-    db = evt.target.result;
-    
-    // check if app is online before reading from db
-    if(navigator.onLine) {
-        checkDatabase()
-    }
-}
-
-request.onerror = function(evt) {
-    console.log("There was an error" + evt.target.errorCode);
+};
+//if there is an error opening indexdb
+request.onerror = function(event) {
+  console.log("Woops! " + event.target.errorCode);
   };
-
-
-function saveRecord(record) {
-    // create a transaction on the pending db with readwrite access
-    const transaction = db.transaction(['pending'], 'readwrite')
-
-    const store = transaction.objectStore('pending')
-
-    // add a record to your store with add method
-    store.add(record)
-
-}
-
-function checkDatabase() {
-    // open a transaction on your pending db
-    const transaction = db.transaction(['pending'], 'readwrite')
-    const store = transaction.objectStore('pending')
-    const getAll = store.getAll()
-
-    getAll.onsuccess = function() {
-        if (getAll.result.length > 0) {
-            fetch('/api/transaction/bulk', {
-                method: 'POST',
-                body: JSON.stringify(getAll.result),
-                headers: {
-                    Accept: 'application/json, text/plain, */*',
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then(response => response.json())
-            .then(() => {
-
-                // if successfull, open a transaction on your pending db
-                const transaction = db.transaction(['pending'], 'readwrite')
-
-                // access your pending object store
-                const store = transaction.objectStore('pending')
-                store.clear()
-            })
-        }
+  
+  function saveRecord(record) {
+    // open a read/write db transaction, ready for adding the data
+    const transaction = db.transaction(["pending"], "readwrite");
+    //setting store variable to objectstore pending
+    const store = transaction.objectStore("pending");
+    //adds idbobject of all objects and adds objects to pending store
+    
+    store.add(record);
     }
-}
-
-
-window.addEventListener('online', checkDatabase)
+    
+    function checkDatabase() {
+    // open a read/write db transaction, ready for adding the data
+    const transaction = db.transaction(["pending"], "readwrite");
+    //setting store variable to objectstore pending
+    const store = transaction.objectStore("pending");
+    //returns idbobject of all objects of pending store
+    const getAll = store.getAll();
+    //when back online use post route /api/transaction/bulk to send to mongoose / mongodb database
+    getAll.onsuccess = function() {
+      if (getAll.result.length > 0) {
+        fetch("/api/transaction/bulk", {
+          method: "POST",
+          body: JSON.stringify(getAll.result),
+          headers: {
+            Accept: "application/json, text/plain, */*",
+            "Content-Type": "application/json"
+          }
+        })
+        .then(response => response.json())
+          .then(() => {
+            // delete records if successful
+            const transaction = db.transaction(["pending"], "readwrite");
+            const store = transaction.objectStore("pending");
+            //deletes idbobject and deletes all objects of pending store
+            store.clear();
+          });
+      }
+    };
+    }
+    
+    // listen for app coming back online
+    window.addEventListener("online", checkDatabase);
