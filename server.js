@@ -17,15 +17,12 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use(express.static('public'));
-
-//for connecting to heroku -- leaving note to push file
+// routes
+app.use(require("./routes/api.js"));
+app.use(express.static(__dirname + '/node_modules/bootstrap/dist'));
 var MongoClient = mongodb.MongoClient;
-var url = mongoose.connect(process.env.MONGOLAB_URI ||  'mongodb://localhost/budget',{
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useFindAndModify: false,
-  useCreateIndex: true,
-})
+//var url = 'mongodb://localhost/exercisetracker';      
+var url = 'mongodb://heroku_hd8nxlfw:cm5m4manr1laf8ttl48m343vlf@ds031203.mlab.com:31203/heroku_hd8nxlfw';
 
 MongoClient.connect(url, function (err, db) {
   if (err) {
@@ -39,16 +36,22 @@ MongoClient.connect(url, function (err, db) {
     db.close();
   }
 });
+var url = process.env.MONGOLAB_URI;
 
-mongoose.connect("mongodb://localhost/budget", {
+//above for connecting to heroku 
+//needed for connecting to mongoose database and creating document exercisetracker
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/workouttracker', {
   useNewUrlParser: true,
-  useFindAndModify: false
-});
+  useUnifiedTopology: true,
+  useFindAndModify: false,
+  useCreateIndex: true
+})
 
-// routes
-app.use(require("./routes/api.js"));
-app.use(express.static(__dirname + '/node_modules/bootstrap/dist'));
 
-app.listen(process.env.PORT || 3000);{
-  console.log(`App running on port ${PORT}!`);
-};
+
+
+
+
+app.listen(process.env.PORT || 3000); {
+  console.log(`App is running on port ${PORT}`)
+}
