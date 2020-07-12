@@ -18,7 +18,7 @@ app.use(express.json());
 
 app.use(express.static('public'));
 
-//for connecting to heroku
+//for connecting to heroku -- leaving note to push file
 var MongoClient = mongodb.MongoClient;
 var url = mongoose.connect(process.env.MONGOLAB_URI ||  'mongodb://localhost/budget',{
   useNewUrlParser: true,
