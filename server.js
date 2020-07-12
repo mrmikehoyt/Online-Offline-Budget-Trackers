@@ -20,7 +20,12 @@ app.use(express.static('public'));
 
 //for connecting to heroku
 var MongoClient = mongodb.MongoClient;
-var url = process.env.MONGOLAB_URI;
+var url = mongoose.connect(process.env.MONGOLAB_URI ||  'mongodb://localhost/budget',{
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useFindAndModify: false,
+  useCreateIndex: true,
+})
 
 MongoClient.connect(url, function (err, db) {
   if (err) {
@@ -34,7 +39,6 @@ MongoClient.connect(url, function (err, db) {
     db.close();
   }
 });
-var url = process.env.MONGOLAB_URI;
 
 mongoose.connect("mongodb://localhost/budget", {
   useNewUrlParser: true,
